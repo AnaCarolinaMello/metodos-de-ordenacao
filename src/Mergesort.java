@@ -14,23 +14,23 @@ public class Mergesort {
     public static void main(String[] args) throws Exception {
         List<Acomadacao> acomadacoes = getData();
         List<Acomadacao> newAcomadacoes = ler(acomadacoes);
+        long startTime = System.currentTimeMillis();
         sort(newAcomadacoes, 0, newAcomadacoes.size() - 1);
+        executionTime = System.currentTimeMillis() - startTime;
         imprimirAll(newAcomadacoes);
         createLog();
     }
 
-    public static void sort(List<Acomadacao> acomodacoes, int left, int right) {
-        long startTime = System.currentTimeMillis();
+    public static void sort(List<Acomadacao> acomodacoes, int left, int right) throws Exception {
         if (left < right) {
             int middle = (left + right) / 2;
             sort(acomodacoes, left, middle);
             sort(acomodacoes, middle + 1, right);
             intercalate(acomodacoes, left, middle, right);
         }
-        executionTime = System.currentTimeMillis() - startTime;
     }
 
-    public static void intercalate(List<Acomadacao> acomodacoes, int left, int middle, int right) {
+    public static void intercalate(List<Acomadacao> acomodacoes, int left, int middle, int right) throws Exception {
         int size1, size2, k, i = 0, j = 0;
 
         size1 = middle - left + 1;
@@ -51,27 +51,24 @@ public class Mergesort {
             Acomadacao acomadacao1 = list1.get(i);
             Acomadacao acomadacao2 = list2.get(j);
             boolean isBigger = compare(acomodacoes, acomadacao1, acomadacao2);
-            if (isBigger) swap(acomodacoes, k, i++);
-            else swap(acomodacoes, k, j++);
+            if (!isBigger) swap(acomodacoes, k, list1.get(i++));
+            else swap(acomodacoes, k, list2.get(j++));
         }
 
-        if (k == i) {
+        if (size1 == i) {
             for (; k <= right; k++) {
-                swap(acomodacoes, k, j++);
+                swap(acomodacoes, k, list2.get(j++));
             }
         } else {
             for (; k <= right; k++) {
-                swap(acomodacoes, k, i++);
+                swap(acomodacoes, k, list1.get(i++));
             }
         }
     }
 
-    public static void swap(List<Acomadacao> acomodacoes, int positionToChange, int positionToInsert) {
+    public static void swap(List<Acomadacao> acomodacoes, int positionToChange, Acomadacao acomadacaoToInsert) {
         swaps++;
-        Acomadacao temp = acomodacoes.get(positionToChange);
-        Acomadacao temp2 = acomodacoes.get(positionToInsert);
-        acomodacoes.set(positionToChange, temp2);
-        acomodacoes.set(positionToInsert, temp);
+        acomodacoes.set(positionToChange, acomadacaoToInsert);
     }
 
     public static boolean compare(List<Acomadacao> acomodacoes, Acomadacao smallAcomadacao, Acomadacao newAcomadacao) {
@@ -133,7 +130,7 @@ public class Mergesort {
 
     public static List<Acomadacao> getData() {
         List<Acomadacao> acomadacoes = new ArrayList<Acomadacao>();
-        String fileName = "tmp/dados_airbnb.txt";
+        String fileName = "/tmp/dados_airbnb.txt";
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line = br.readLine();
