@@ -11,7 +11,7 @@ public class Selection {
     private static int swaps = 0, comparisons = 0;
     private static long executionTime = 0;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         List<Acomadacao> acomadacoes = getData();
         List<Acomadacao> newAcomadacoes = ler(acomadacoes);
         sort(newAcomadacoes);
