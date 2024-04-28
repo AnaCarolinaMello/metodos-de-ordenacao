@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Mergesort {
+public class Quicksort {
     private static int swaps = 0, comparisons = 0;
     private static long executionTime = 0;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         List<Acomadacao> acomadacoes = getData();
         List<Acomadacao> newAcomadacoes = ler(acomadacoes);
         long startTime = System.currentTimeMillis();
@@ -23,69 +23,58 @@ public class Mergesort {
 
     public static void sort(List<Acomadacao> acomodacoes, int left, int right) {
         if (left < right) {
-            int middle = (left + right) / 2;
-            sort(acomodacoes, left, middle);
-            sort(acomodacoes, middle + 1, right);
-            intercalate(acomodacoes, left, middle, right);
+            int part = partition(acomodacoes, left, right);
+            sort(acomodacoes, left, part - 1);
+            sort(acomodacoes, part + 1, right);
         }
     }
 
-    public static void intercalate(List<Acomadacao> acomodacoes, int left, int middle, int right) {
-        int size1, size2, k, i = 0, j = 0;
-
-        size1 = middle - left + 1;
-        size2 = right - middle;
-
-        List<Acomadacao> list1 = new ArrayList<Acomadacao>();
-        List<Acomadacao> list2 = new ArrayList<Acomadacao>();
-
-        for (int l = 0; l < size1; l++) {
-            list1.add(acomodacoes.get(l + left));
-        }
-
-        for (int l = 0; l < size2; l++) {
-            list2.add(acomodacoes.get(middle + l + 1));
-        }
-
-        for (k = left; i < size1 && j < size2; k++) {
-            Acomadacao acomadacao1 = list1.get(i);
-            Acomadacao acomadacao2 = list2.get(j);
-            boolean isBigger = compare(acomodacoes, acomadacao1, acomadacao2);
-            if (!isBigger) swap(acomodacoes, k, list1.get(i++));
-            else swap(acomodacoes, k, list2.get(j++));
-        }
-
-        if (size1 == i) {
-            for (; k <= right; k++) {
-                swap(acomodacoes, k, list2.get(j++));
-            }
-        } else {
-            for (; k <= right; k++) {
-                swap(acomodacoes, k, list1.get(i++));
+    public static int partition(List<Acomadacao> acomodacoes, int start, int end) {
+        int part = start - 1;
+        for (int i = start; i < end; i++) {
+            if (compare(acomodacoes, end, i)) {
+                part++;
+                swap(acomodacoes, part, i);
             }
         }
+        part++;
+        swap(acomodacoes, part, end);
+        return part;
     }
 
-    public static void swap(List<Acomadacao> acomodacoes, int positionToChange, Acomadacao acomadacaoToInsert) {
+    public static void swap(List<Acomadacao> acomodacoes, int positionToChange, int positionToInsert) {
         swaps++;
-        acomodacoes.set(positionToChange, acomadacaoToInsert);
+        Acomadacao temp = acomodacoes.get(positionToChange);
+        Acomadacao temp2 = acomodacoes.get(positionToInsert);
+        acomodacoes.set(positionToChange, temp2);
+        acomodacoes.set(positionToInsert, temp);
     }
 
-    public static boolean compare(List<Acomadacao> acomodacoes, Acomadacao smallAcomadacao, Acomadacao newAcomadacao) {
+    public static boolean compare(List<Acomadacao> acomodacoes, int small, int newPosition) {
         comparisons++;
         boolean isBigger = false;
+        Acomadacao smallAcomadacao = acomodacoes.get(small);
+        Acomadacao newAcomadacao = acomodacoes.get(newPosition);
 
-        if (smallAcomadacao.getHostId() == newAcomadacao.getHostId()) {
-            if (smallAcomadacao.getRoomId() > newAcomadacao.getRoomId()) isBigger = true;
-        } else if (smallAcomadacao.getHostId() > newAcomadacao.getHostId()) {
-            isBigger = true;
-        }
+        if (smallAcomadacao.getPrice() == newAcomadacao.getPrice()) {
+            int comapared = compareStrings(smallAcomadacao.getRoomType(), newAcomadacao.getRoomType());
+            if (comapared == 0) {
+                if (smallAcomadacao.getRoomId() > newAcomadacao.getRoomId()) isBigger = true;
+            } else if (comapared > 0) {
+                isBigger = true;
+            }
+            
+        } else if (smallAcomadacao.getPrice() > newAcomadacao.getPrice()) isBigger = true;
 
         return isBigger;
     }
 
+    private static int compareStrings(String value, String compare) {
+        return value.compareTo(compare);
+    }
+
     public static void createLog() {
-        String fileToSave = "00801198_mergesort.txt";
+        String fileToSave = "00801198_quicksort.txt";
         String log = "00801198\t" + executionTime + "ms\t" + comparisons + "\t" + swaps;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
@@ -163,6 +152,7 @@ public class Mergesort {
         return acomadacoes;
     }
 }
+
 class Acomadacao {
     private int roomId;
     private int hostId;
