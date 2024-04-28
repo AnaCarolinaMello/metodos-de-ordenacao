@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Selection {
+public class Heapsort {
     private static int swaps = 0, comparisons = 0;
     private static long executionTime = 0;
 
@@ -21,15 +21,18 @@ public class Selection {
 
     public static void sort(List<Acomadacao> acomodacoes) {
         long startTime = System.currentTimeMillis();
-        for (int i = 0; i < acomodacoes.size(); i++) {
-            int small = i;
-            for (int j = i + 1; j < acomodacoes.size(); j++) {
-                small = compare(acomodacoes, small, j);
-            }
-            if (small != i) {
-                swap(acomodacoes, i, small);
-            }
+        acomodacoes.add(0, null);
+
+        for (int i = 2; i < acomodacoes.size(); i++) {
+            createHeap(acomodacoes, i);
         }
+
+        int size = acomodacoes.size() - 1;
+        while (size > 1) {
+            swap(acomodacoes, 1, size--);
+            rebuildHeap(acomodacoes, size);
+        }
+        acomodacoes.remove(0);
         executionTime = System.currentTimeMillis() - startTime;
     }
 
@@ -41,38 +44,21 @@ public class Selection {
         acomodacoes.set(positionToInsert, temp);
     }
 
-    public static int compare(List<Acomadacao> acomodacoes, int small, int newPosition) {
+    public static boolean compare(List<Acomadacao> acomodacoes, int small, int newPosition) {
         comparisons++;
-        int actualSmall = small;
+        boolean isBigger = false;
         Acomadacao smallAcomadacao = acomodacoes.get(small);
         Acomadacao newAcomadacao = acomodacoes.get(newPosition);
-        int comapared = compareStrings(smallAcomadacao.getCountry(), newAcomadacao.getCountry());
 
-        if (comapared == 0) {
-            comapared = compareStrings(smallAcomadacao.getCity(), newAcomadacao.getCity());
-            if (comapared == 0) {
-                comapared = compareStrings(smallAcomadacao.getNeighbourhood(), newAcomadacao.getNeighbourhood());
-                if (comapared == 0) {
-                    if (smallAcomadacao.getRoomId() > newAcomadacao.getRoomId()) actualSmall = newPosition;
-                } else if (comapared > 0) {
-                    actualSmall = newPosition;
-                }
-            } else if (comapared > 0) {
-                actualSmall = newPosition;
-            }
-        } else if (comapared > 0) {
-            actualSmall = newPosition;
-        }
+        if (smallAcomadacao.getReviews() == newAcomadacao.getReviews()) {
+            if (smallAcomadacao.getRoomId() > newAcomadacao.getRoomId()) isBigger = true;
+        } else if (smallAcomadacao.getReviews() > newAcomadacao.getReviews() ) isBigger = true;
 
-        return actualSmall;
-    }
-
-    private static int compareStrings(String value, String compare) {
-        return value.compareTo(compare);
+        return isBigger;
     }
 
     public static void createLog() {
-        String fileToSave = "00801198_selecao.txt";
+        String fileToSave = "00801198_heapsort.txt";
         String log = "00801198\t" + executionTime + "ms\t" + comparisons + "\t" + swaps;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
@@ -85,6 +71,36 @@ public class Selection {
         for (Acomadacao acomadacao : acomodacoes) {
             acomadacao.imprimir();
         }
+    }
+
+    public static void createHeap(List<Acomadacao> acomodacoes, int index) {
+        for (int i = index; i > 1 && compare(acomodacoes, i, i / 2); i /= 2) {
+            swap(acomodacoes, i, i / 2);
+        }
+    }
+
+    public static void rebuildHeap(List<Acomadacao> acomodacoes, int size) {
+        int i = 1;
+        while (i <= size / 2) {
+            int child = getBiggerPosition(acomodacoes, i, size);
+            if (compare(acomodacoes, child, i)) {
+                swap(acomodacoes, i, child);
+                i = child;
+            } else {
+                i = size;
+            }
+        }
+    }
+
+    public static int getBiggerPosition(List<Acomadacao> acomodacoes, int index, int size) {
+        int child;
+        if (2 * index == size || compare(acomodacoes, 2 * index, (2 * index) + 1)) {
+            child = 2 * index;
+        } else {
+            child = (2 * index) + 1;
+        }
+
+        return child;
     }
 
     public static List<Acomadacao> ler(List<Acomadacao> acomodacoes) {

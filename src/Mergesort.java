@@ -75,9 +75,9 @@ public class Mergesort {
         comparisons++;
         boolean isBigger = false;
 
-        if (smallAcomadacao.hostId == newAcomadacao.hostId) {
-            if (smallAcomadacao.roomId > newAcomadacao.roomId) isBigger = true;
-        } else if (smallAcomadacao.hostId > newAcomadacao.hostId) {
+        if (smallAcomadacao.getHostId() == newAcomadacao.getHostId()) {
+            if (smallAcomadacao.getRoomId() > newAcomadacao.getRoomId()) isBigger = true;
+        } else if (smallAcomadacao.getHostId() > newAcomadacao.getHostId()) {
             isBigger = true;
         }
 
@@ -162,190 +162,189 @@ public class Mergesort {
 
         return acomadacoes;
     }
+}
+class Acomadacao {
+    private int roomId;
+    private int hostId;
+    private String roomType;
+    private String country;
+    private String city;
+    private String neighbourhood;
+    private int reviews;
+    private double overallSatisfaction;
+    private int accommodates;
+    private double bedrooms;
+    private double price;
+    private String propertyType;
 
-    public static class Acomadacao {
-        private int roomId;
-        private int hostId;
-        private String roomType;
-        private String country;
-        private String city;
-        private String neighbourhood;
-        private int reviews;
-        private double overallSatisfaction;
-        private int accommodates;
-        private double bedrooms;
-        private double price;
-        private String propertyType;
+    public Acomadacao() {
+        setRoomId(0);
+        setHostId(0);
+        setRoomType("");
+        setCountry("");
+        setCity("");
+        setNeighbourhood("");
+        setReviews(0);
+        setOverallSatisfaction(0);
+        setAccommodates(0);
+        setBedrooms(0);
+        setPrice(0);
+        setPropertyType("");
+    }
 
-        public Acomadacao() {
-            setRoomId(0);
-            setHostId(0);
-            setRoomType("");
-            setCountry("");
-            setCity("");
-            setNeighbourhood("");
-            setReviews(0);
-            setOverallSatisfaction(0);
-            setAccommodates(0);
-            setBedrooms(0);
-            setPrice(0);
-            setPropertyType("");
+    public Acomadacao(int roomId, int hostId, String roomType, String country, String city, String neighbourhood,
+            int reviews, double overallSatisfaction, int accommodates, double bedrooms, double price,
+            String propertyType) {
+        setRoomId(roomId);
+        setHostId(hostId);
+        setRoomType(roomType);
+        setCountry(country);
+        setCity(city);
+        setNeighbourhood(neighbourhood);
+        setReviews(reviews);
+        setOverallSatisfaction(overallSatisfaction);
+        setAccommodates(accommodates);
+        setBedrooms(bedrooms);
+        setPrice(price);
+        setPropertyType(propertyType);
+    }
+
+    public static void ler(List<Acomadacao> acomodacoes) {
+        Scanner scanner = new Scanner(System.in);
+        String s = scanner.nextLine();
+        while (!s.equals("FIM")) {
+            String copy = s;
+            Acomadacao acomodacao = 
+                acomodacoes.stream()
+                    .filter((value) -> value.getRoomId() == Integer.parseInt(copy))
+                    .findFirst()
+                    .get();
+            acomodacao.imprimir();
+
+            s = scanner.nextLine();
         }
+        scanner.close();
+    }
 
-        public Acomadacao(int roomId, int hostId, String roomType, String country, String city, String neighbourhood,
-                int reviews, double overallSatisfaction, int accommodates, double bedrooms, double price,
-                String propertyType) {
-            setRoomId(roomId);
-            setHostId(hostId);
-            setRoomType(roomType);
-            setCountry(country);
-            setCity(city);
-            setNeighbourhood(neighbourhood);
-            setReviews(reviews);
-            setOverallSatisfaction(overallSatisfaction);
-            setAccommodates(accommodates);
-            setBedrooms(bedrooms);
-            setPrice(price);
-            setPropertyType(propertyType);
-        }
+    public int getRoomId() {
+        return this.roomId;
+    }
 
-        public static void ler(List<Acomadacao> acomodacoes) {
-            Scanner scanner = new Scanner(System.in);
-            String s = scanner.nextLine();
-            while (!s.equals("FIM")) {
-                String copy = s;
-                Acomadacao acomodacao = 
-                    acomodacoes.stream()
-                        .filter((value) -> value.getRoomId() == Integer.parseInt(copy))
-                        .findFirst()
-                        .get();
-                acomodacao.imprimir();
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
+    }
 
-                s = scanner.nextLine();
-            }
-            scanner.close();
-        }
+    public int getHostId() {
+        return this.hostId;
+    }
 
-        public int getRoomId() {
-            return this.roomId;
-        }
+    public void setHostId(int hostId) {
+        this.hostId = hostId;
+    }
 
-        public void setRoomId(int roomId) {
-            this.roomId = roomId;
-        }
+    public String getRoomType() {
+        return this.roomType;
+    }
 
-        public int getHostId() {
-            return this.hostId;
-        }
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
 
-        public void setHostId(int hostId) {
-            this.hostId = hostId;
-        }
+    public String getCountry() {
+        return this.country;
+    }
 
-        public String getRoomType() {
-            return this.roomType;
-        }
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-        public void setRoomType(String roomType) {
-            this.roomType = roomType;
-        }
+    public String getCity() {
+        return this.city;
+    }
 
-        public String getCountry() {
-            return this.country;
-        }
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-        public void setCountry(String country) {
-            this.country = country;
-        }
+    public String getNeighbourhood() {
+        return this.neighbourhood;
+    }
 
-        public String getCity() {
-            return this.city;
-        }
+    public void setNeighbourhood(String neighbourhood) {
+        this.neighbourhood = neighbourhood;
+    }
 
-        public void setCity(String city) {
-            this.city = city;
-        }
+    public int getReviews() {
+        return this.reviews;
+    }
 
-        public String getNeighbourhood() {
-            return this.neighbourhood;
-        }
+    public void setReviews(int reviews) {
+        this.reviews = reviews;
+    }
 
-        public void setNeighbourhood(String neighbourhood) {
-            this.neighbourhood = neighbourhood;
-        }
+    public double getOverallSatisfaction() {
+        return this.overallSatisfaction;
+    }
 
-        public int getReviews() {
-            return this.reviews;
-        }
+    public void setOverallSatisfaction(double overallSatisfaction) {
+        this.overallSatisfaction = overallSatisfaction;
+    }
 
-        public void setReviews(int reviews) {
-            this.reviews = reviews;
-        }
+    public int getAccommodates() {
+        return this.accommodates;
+    }
 
-        public double getOverallSatisfaction() {
-            return this.overallSatisfaction;
-        }
+    public void setAccommodates(int accommodates) {
+        this.accommodates = accommodates;
+    }
 
-        public void setOverallSatisfaction(double overallSatisfaction) {
-            this.overallSatisfaction = overallSatisfaction;
-        }
+    public double getBedrooms() {
+        return this.bedrooms;
+    }
 
-        public int getAccommodates() {
-            return this.accommodates;
-        }
+    public void setBedrooms(double bedrooms) {
+        this.bedrooms = bedrooms;
+    }
 
-        public void setAccommodates(int accommodates) {
-            this.accommodates = accommodates;
-        }
+    public double getPrice() {
+        return this.price;
+    }
 
-        public double getBedrooms() {
-            return this.bedrooms;
-        }
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
-        public void setBedrooms(double bedrooms) {
-            this.bedrooms = bedrooms;
-        }
+    public String getPropertyType() {
+        return this.propertyType;
+    }
 
-        public double getPrice() {
-            return this.price;
-        }
+    public void setPropertyType(String propertyType) {
+        this.propertyType = propertyType;
+    }
 
-        public void setPrice(double price) {
-            this.price = price;
-        }
+    public void imprimir() {
+        System.out.println(toString());
+    }
 
-        public String getPropertyType() {
-            return this.propertyType;
-        }
+    public Acomadacao clone() {
+        return new Acomadacao(roomId, hostId, roomType, country, city, neighbourhood, reviews, overallSatisfaction, accommodates, bedrooms, price, propertyType);
+    }
 
-        public void setPropertyType(String propertyType) {
-            this.propertyType = propertyType;
-        }
-
-        public void imprimir() {
-            System.out.println(toString());
-        }
-
-        public Acomadacao clone() {
-            return new Acomadacao(roomId, hostId, roomType, country, city, neighbourhood, reviews, overallSatisfaction, accommodates, bedrooms, price, propertyType);
-        }
-
-        @Override
-        public String toString() {
-            return "[" +
-                getRoomId() + " ## " +
-                getHostId() + " ## " +
-                getRoomType() + " ## " +
-                getCountry() + " ## " +
-                getCity() + " ## " +
-                getNeighbourhood() + " ## " +
-                getReviews() + " ## " +
-                getOverallSatisfaction() + " ## " +
-                getAccommodates() + " ## " +
-                getBedrooms() + " ## " +
-                getPrice() + " ## " +
-                getPropertyType() +
-            "]";
-        }
+    @Override
+    public String toString() {
+        return "[" +
+            getRoomId() + " ## " +
+            getHostId() + " ## " +
+            getRoomType() + " ## " +
+            getCountry() + " ## " +
+            getCity() + " ## " +
+            getNeighbourhood() + " ## " +
+            getReviews() + " ## " +
+            getOverallSatisfaction() + " ## " +
+            getAccommodates() + " ## " +
+            getBedrooms() + " ## " +
+            getPrice() + " ## " +
+            getPropertyType() +
+        "]";
     }
 }
