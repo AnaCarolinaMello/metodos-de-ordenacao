@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Bubble {
+public class Insertion {
     private static int swaps = 0, comparisons = 0;
     private static long executionTime = 0;
 
@@ -21,39 +21,35 @@ public class Bubble {
 
     public static void sort(List<Acomadacao> acomodacoes) {
         long startTime = System.currentTimeMillis();
-        boolean swapped;
-        for (int i = acomodacoes.size() - 1; i > 0; i--) {
-            swapped = false;
-            for(int j = 0; j < i ; j++){
-                if(compare(acomodacoes.get(j), acomodacoes.get(j + 1))){
-                    swap(acomodacoes, j, j + 1);
-                    swapped = true;
-                }
+        for(int i = 1; i < acomodacoes.size(); i++){
+            Acomadacao tmp = acomodacoes.get(i);
+            int j = i - 1;
+
+            while(j >= 0 && compare(acomodacoes.get(j), tmp)){
+                swap(acomodacoes, j + 1, acomodacoes.get(j));
+                j--;
             }
-            if (!swapped) break;
+            swap(acomodacoes, j + 1, tmp);
         }
         executionTime = System.currentTimeMillis() - startTime;
     }
 
-    public static void swap(List<Acomadacao> acomodacoes, int i, int j) {
+    public static void swap(List<Acomadacao> acomodacoes, int i, Acomadacao acomadacao) {
         swaps++;
-        Acomadacao temp = acomodacoes.get(i);
-        Acomadacao temp2 = acomodacoes.get(j);
-        acomodacoes.set(i, temp2);
-        acomodacoes.set(j, temp);
+        acomodacoes.set(i, acomadacao);
     }
 
     public static boolean compare(Acomadacao a1, Acomadacao a2) {
         comparisons++;
-        if (a1.getOverallSatisfaction() == a2.getOverallSatisfaction()) {
+        if (a1.getAccommodates() == a2.getAccommodates()) {
             if (a1.getRoomId() > a2.getRoomId()) return true;
-        } else if (a1.getOverallSatisfaction() > a2.getOverallSatisfaction()) return true;
+        } else if (a1.getAccommodates() > a2.getAccommodates()) return true;
 
         return false;
     }
 
     public static void createLog() {
-        String fileToSave = "00801198_bolha.txt";
+        String fileToSave = "00801198_insercao.txt";
         String log = "00801198\t" + executionTime + "ms\t" + comparisons + "\t" + swaps;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
